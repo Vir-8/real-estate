@@ -1,0 +1,27 @@
+{
+  "name": "twilio-conference-transcription",
+  "version": "1.0.0",
+  "description": "Fastify backend for Twilio conference calls with transcription",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "@fastify/env": "^4.4.0",
+    "@fastify/formbody": "^7.4.0",
+    "@fastify/static": "^6.12.0",
+    "@fastify/websocket": "^8.3.1",
+    "axios": "^1.8.1",
+    "dotenv": "^16.4.7",
+    "fastify": "^4.29.0",
+    "openai": "^4.86.1",
+    "pino-pretty": "^13.0.0",
+    "twilio": "^4.23.0",
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
