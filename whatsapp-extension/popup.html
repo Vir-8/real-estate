@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WhatsApp Message Logger</title>
+  <style>
+    * {
+      color: #616161;
+    }
+    body {
+      width: 200px;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #128C7E;
+    }
+    .status {
+      margin-top: 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h3>WhatsApp Message Logger</h3>
+  <p>Toggle logging of WhatsApp messages to the console.</p>
+  <button id="toggleBtn">Enable Logging</button>
+  <div class="status" id="status">Status: Disabled</div>
+  <script src="popup.js"></script>
+</body>
+</html>
