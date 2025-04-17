@@ -148,9 +148,20 @@ fastify.register(async function (fastify) {
         },
         transcription_config: {
           language: "en",
-          enable_partials: true,
-          max_delay: 2,         // Reduced max delay for faster transcription
-          operating_point: "enhanced" // For better accuracy
+          enable_partials: false,
+          max_delay: 2.0,         // Increased delay for more complete sentences
+          operating_point: "enhanced", // For better accuracy
+          diarization: "none",   // Disable diarization since we use separate streams
+          punctuation_overrides: {
+            "permitted_marks": [
+              ".",
+              ",",
+              "?",
+              "!",
+              ";",
+              ":"
+            ]
+          }
         }
       };
 
