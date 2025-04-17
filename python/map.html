@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_9ba099f7ae681e96c0a2fae5d208ef12 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+        <script>
+            var locations = [{"place_name": "Godrej-BKC", "address": "G-Block Bandra-Kurla-Complex Mumbai", "lat": 19.0623, "lon": 72.8659, "area_type": "prime", "details": {"school_districts": "Several schools nearby including Dhirubhai Ambani International School", "public_transport": "Excellent connectivity via buses and Bandra-Kurla-Complex railway station", "local_amenities": "Numerous restaurants banks and shopping options available", "zoning_info": "Commercial zone"}}, {"place_name": "Maker-Maxity", "address": "Bandra-Kurla-Complex Mumbai", "lat": 19.0605, "lon": 72.8665, "area_type": "prime", "details": {"school_districts": "Close to several reputable schools", "public_transport": "Well connected by bus and rail networks", "local_amenities": "Variety of dining and retail establishments", "zoning_info": "Commercial"}}, {"place_name": "One-BKC", "address": "Bandra-Kurla-Complex Mumbai", "lat": 19.0582, "lon": 72.8641, "area_type": "prime", "details": {"school_districts": "Proximity to top-rated schools", "public_transport": "Easily accessible via public transportation", "local_amenities": "Wide range of amenities including restaurants and shops", "zoning_info": "Commercial area"}}, {"place_name": "The-Capital", "address": "Bandra-Kurla-Complex Mumbai", "lat": 19.0571, "lon": 72.8672, "area_type": "prime", "details": {"school_districts": "Good access to school districts", "public_transport": "Good public transport links", "local_amenities": "Many local amenities", "zoning_info": "Commercial zone"}}, {"place_name": "Platina", "address": "Bandra-Kurla-Complex Mumbai", "lat": 19.0568, "lon": 72.8651, "area_type": "prime", "details": {"school_districts": "Several schools in the vicinity", "public_transport": "Easily accessible by public transport", "local_amenities": "Various amenities available nearby", "zoning_info": "Commercial"}}, {"place_name": "Kohinoor-City", "address": "Kurla-East Mumbai", "lat": 19.0785, "lon": 72.8855, "area_type": "non-prime", "details": {"school_districts": "Several schools located nearby", "public_transport": "Well connected by local trains and buses", "local_amenities": "Various shops restaurants and markets available", "zoning_info": "Mixed residential and commercial zone"}}, {"place_name": "Phoenix-Marketcity", "address": "Kurla-West Mumbai", "lat": 19.0769, "lon": 72.8819, "area_type": "non-prime", "details": {"school_districts": "Several schools are located nearby", "public_transport": "Easily accessible by bus and train", "local_amenities": "Wide range of shopping dining and entertainment options", "zoning_info": "Commercial zone"}}, {"place_name": "Neelyog-IT-Park", "address": "Goregaon-East Mumbai", "lat": 19.1648, "lon": 72.8533, "area_type": "non-prime", "details": {"school_districts": "Several schools in close proximity", "public_transport": "Well connected by road and rail", "local_amenities": "Various amenities available nearby", "zoning_info": "Commercial zone"}}, {"place_name": "R-Tech-Park", "address": "Chembur Mumbai", "lat": 19.0511, "lon": 72.9012, "area_type": "non-prime", "details": {"school_districts": "Good access to school districts", "public_transport": "Good public transport links", "local_amenities": "Many local amenities", "zoning_info": "Commercial zone"}}, {"place_name": "I-Land-Asia", "address": "Chembur Mumbai", "lat": 19.0533, "lon": 72.8998, "area_type": "non-prime", "details": {"school_districts": "Several schools located nearby", "public_transport": "Well connected by road and rail", "local_amenities": "Various amenities available nearby", "zoning_info": "Commercial zone"}}];
+            
+            function updateSidebar(idx) {
+                var loc = locations[idx];
+                var content = `
+                    <h3 style="color: #2c3e50;"><i class="fa fa-building"></i> ${loc.place_name}</h3>
+                    <p style="color: #34495e;"><i class="fa fa-map-marker"></i> ${loc.address}</p>
+                    <hr style="border-top: 2px solid #eee;">
+                    <div class="details">
+                        <p class="text-muted">Details in English:</p>
+                        <p><b><i class="fa fa-school"></i> School Districts:</b><br>
+                        ${loc.details.school_districts}</p>
+                        <p><b><i class="fa fa-bus"></i> Public Transportation:</b><br>
+                        ${loc.details.public_transport}</p>
+                        <p><b><i class="fa fa-store"></i> Local Amenities:</b><br>
+                        ${loc.details.local_amenities}</p>
+                        <p><b><i class="fa fa-building"></i> Zoning Information:</b><br>
+                        ${loc.details.zoning_info}</p>
+                        <p><b><i class="fa fa-star"></i> Area Type:</b> ${loc.area_type}</p>
+                    </div>
+                `;
+                document.getElementById('sidebar-content').innerHTML = content;
+            }
+        </script>
+    
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <div id="sidebar" style="
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 350px;
+        height: 90%;
+        background: white;
+        z-index: 9999;
+        overflow: auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        font-family: Arial, sans-serif;
+    ">
+        <div id="sidebar-header">
+            <h3><i class="fa fa-info-circle"></i> Location Details</h3>
+            <p><i class="fa fa-mouse-pointer"></i> Click on a marker to see details</p>
+            <div style="margin-top: 15px;">
+                <p><i class="fa fa-map-marker" style="color: blue;"></i> Prime Location</p>
+                <p><i class="fa fa-map-marker" style="color: orange;"></i> Non-prime Location</p>
+            </div>
+            <hr>
+        </div>
+        <div id="sidebar-content">
+            <!-- Location details will be inserted here -->
+        </div>
+    </div>
+    
+    
+            <div class="folium-map" id="map_9ba099f7ae681e96c0a2fae5d208ef12" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_9ba099f7ae681e96c0a2fae5d208ef12 = L.map(
+                "map_9ba099f7ae681e96c0a2fae5d208ef12",
+                {
+                    center: [19.071949999999998, 72.87505],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 14,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_141f03f5b5593cfcf2a757a4df6aa864 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_141f03f5b5593cfcf2a757a4df6aa864.addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var marker_c08bb6f02e403ba11cbde3c84973738e = L.marker(
+                [19.0623, 72.8659],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_7acef633dc770569e9ea55c21379e4c9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4687a557e738370d26d470761fea20c2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f97ce344a52c505e9a578471aec9f7c7 = $(`<div id="html_f97ce344a52c505e9a578471aec9f7c7" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>Godrej-BKC</h4>                 <p>G-Block Bandra-Kurla-Complex Mumbai</p>                 <button onclick="updateSidebar(0)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_4687a557e738370d26d470761fea20c2.setContent(html_f97ce344a52c505e9a578471aec9f7c7);
+            
+        
+
+        marker_c08bb6f02e403ba11cbde3c84973738e.bindPopup(popup_4687a557e738370d26d470761fea20c2)
+        ;
+
+        
+    
+    
+                marker_c08bb6f02e403ba11cbde3c84973738e.setIcon(icon_7acef633dc770569e9ea55c21379e4c9);
+            
+    
+            var marker_29af21ca48a0061d3a7f594b82991a18 = L.marker(
+                [19.0605, 72.8665],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_f59a75f9d4daa87af8516a292d4aaa10 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9192c96468dc50560b26ead7d3857b36 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7b59a202c0dd4223ad9e40c2e28c6e13 = $(`<div id="html_7b59a202c0dd4223ad9e40c2e28c6e13" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>Maker-Maxity</h4>                 <p>Bandra-Kurla-Complex Mumbai</p>                 <button onclick="updateSidebar(1)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_9192c96468dc50560b26ead7d3857b36.setContent(html_7b59a202c0dd4223ad9e40c2e28c6e13);
+            
+        
+
+        marker_29af21ca48a0061d3a7f594b82991a18.bindPopup(popup_9192c96468dc50560b26ead7d3857b36)
+        ;
+
+        
+    
+    
+                marker_29af21ca48a0061d3a7f594b82991a18.setIcon(icon_f59a75f9d4daa87af8516a292d4aaa10);
+            
+    
+            var marker_57b54af946fbaf570fd7333d23332a8d = L.marker(
+                [19.0582, 72.8641],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_721de568403779be6b2af48418683d2e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3e36ae4322e33772ce34ce494cba4edd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f7c6189a06ae7c8509dae58a6333eb5e = $(`<div id="html_f7c6189a06ae7c8509dae58a6333eb5e" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>One-BKC</h4>                 <p>Bandra-Kurla-Complex Mumbai</p>                 <button onclick="updateSidebar(2)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_3e36ae4322e33772ce34ce494cba4edd.setContent(html_f7c6189a06ae7c8509dae58a6333eb5e);
+            
+        
+
+        marker_57b54af946fbaf570fd7333d23332a8d.bindPopup(popup_3e36ae4322e33772ce34ce494cba4edd)
+        ;
+
+        
+    
+    
+                marker_57b54af946fbaf570fd7333d23332a8d.setIcon(icon_721de568403779be6b2af48418683d2e);
+            
+    
+            var marker_3c8f7109eeedd550afd48b34df806039 = L.marker(
+                [19.0571, 72.8672],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_499cb27faf254a4184b4b7fe21cea23c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_96970eefc77fadce4da58a1435e18294 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0c09af2179fc19bf4a5836f416bb1b84 = $(`<div id="html_0c09af2179fc19bf4a5836f416bb1b84" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>The-Capital</h4>                 <p>Bandra-Kurla-Complex Mumbai</p>                 <button onclick="updateSidebar(3)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_96970eefc77fadce4da58a1435e18294.setContent(html_0c09af2179fc19bf4a5836f416bb1b84);
+            
+        
+
+        marker_3c8f7109eeedd550afd48b34df806039.bindPopup(popup_96970eefc77fadce4da58a1435e18294)
+        ;
+
+        
+    
+    
+                marker_3c8f7109eeedd550afd48b34df806039.setIcon(icon_499cb27faf254a4184b4b7fe21cea23c);
+            
+    
+            var marker_284356c4184fe7abc03216d8317d427f = L.marker(
+                [19.0568, 72.8651],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_4cd4677e25025be4bb4068390a8de0fb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_48550589d757dc345c8298acbfa94d67 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a7a695443e6db41961276c3bc116d364 = $(`<div id="html_a7a695443e6db41961276c3bc116d364" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>Platina</h4>                 <p>Bandra-Kurla-Complex Mumbai</p>                 <button onclick="updateSidebar(4)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_48550589d757dc345c8298acbfa94d67.setContent(html_a7a695443e6db41961276c3bc116d364);
+            
+        
+
+        marker_284356c4184fe7abc03216d8317d427f.bindPopup(popup_48550589d757dc345c8298acbfa94d67)
+        ;
+
+        
+    
+    
+                marker_284356c4184fe7abc03216d8317d427f.setIcon(icon_4cd4677e25025be4bb4068390a8de0fb);
+            
+    
+            var marker_cf91585bf47517dda6f7b1802fb0ed76 = L.marker(
+                [19.0785, 72.8855],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_63c689a1e8c5aa728bd6e2596a5b383a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_99c6ea2f64cb8d279e6a37dc7bd6eb1f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_53395d260bc7ba6c03eced817cd34947 = $(`<div id="html_53395d260bc7ba6c03eced817cd34947" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>Kohinoor-City</h4>                 <p>Kurla-East Mumbai</p>                 <button onclick="updateSidebar(5)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_99c6ea2f64cb8d279e6a37dc7bd6eb1f.setContent(html_53395d260bc7ba6c03eced817cd34947);
+            
+        
+
+        marker_cf91585bf47517dda6f7b1802fb0ed76.bindPopup(popup_99c6ea2f64cb8d279e6a37dc7bd6eb1f)
+        ;
+
+        
+    
+    
+                marker_cf91585bf47517dda6f7b1802fb0ed76.setIcon(icon_63c689a1e8c5aa728bd6e2596a5b383a);
+            
+    
+            var marker_b7f623aaa28454d396257f29d0894eaf = L.marker(
+                [19.0769, 72.8819],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_b9bcf4dd2e819954bed8ad92e40d2744 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2cdaa691ec76bfaefeeae3b2ac9e3e7e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_78544302dbbf762434ac0e099f90c6e7 = $(`<div id="html_78544302dbbf762434ac0e099f90c6e7" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>Phoenix-Marketcity</h4>                 <p>Kurla-West Mumbai</p>                 <button onclick="updateSidebar(6)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_2cdaa691ec76bfaefeeae3b2ac9e3e7e.setContent(html_78544302dbbf762434ac0e099f90c6e7);
+            
+        
+
+        marker_b7f623aaa28454d396257f29d0894eaf.bindPopup(popup_2cdaa691ec76bfaefeeae3b2ac9e3e7e)
+        ;
+
+        
+    
+    
+                marker_b7f623aaa28454d396257f29d0894eaf.setIcon(icon_b9bcf4dd2e819954bed8ad92e40d2744);
+            
+    
+            var marker_da9bb7e6bbe243749d5caadcabe36190 = L.marker(
+                [19.1648, 72.8533],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_1e7ce205ea1245a035bfe29d7e3359dc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b8074430c06dd00ff93ad26e39e8bab4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1dde059df4c529aed6ecea6772bf3b14 = $(`<div id="html_1dde059df4c529aed6ecea6772bf3b14" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>Neelyog-IT-Park</h4>                 <p>Goregaon-East Mumbai</p>                 <button onclick="updateSidebar(7)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_b8074430c06dd00ff93ad26e39e8bab4.setContent(html_1dde059df4c529aed6ecea6772bf3b14);
+            
+        
+
+        marker_da9bb7e6bbe243749d5caadcabe36190.bindPopup(popup_b8074430c06dd00ff93ad26e39e8bab4)
+        ;
+
+        
+    
+    
+                marker_da9bb7e6bbe243749d5caadcabe36190.setIcon(icon_1e7ce205ea1245a035bfe29d7e3359dc);
+            
+    
+            var marker_5f1acde4e9952f0a5d2386a7131e12c7 = L.marker(
+                [19.0511, 72.9012],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_ed911f062edd0dbeccd17aaa1d4914cd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_57a851dadc7e05d5f23822aa93438c64 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_60a53f9f4dbb66663beb1c6bc3c5eba7 = $(`<div id="html_60a53f9f4dbb66663beb1c6bc3c5eba7" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>R-Tech-Park</h4>                 <p>Chembur Mumbai</p>                 <button onclick="updateSidebar(8)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_57a851dadc7e05d5f23822aa93438c64.setContent(html_60a53f9f4dbb66663beb1c6bc3c5eba7);
+            
+        
+
+        marker_5f1acde4e9952f0a5d2386a7131e12c7.bindPopup(popup_57a851dadc7e05d5f23822aa93438c64)
+        ;
+
+        
+    
+    
+                marker_5f1acde4e9952f0a5d2386a7131e12c7.setIcon(icon_ed911f062edd0dbeccd17aaa1d4914cd);
+            
+    
+            var marker_2c4b50655265c4c58ac6bce91ea8ca6f = L.marker(
+                [19.0533, 72.8998],
+                {
+}
+            ).addTo(map_9ba099f7ae681e96c0a2fae5d208ef12);
+        
+    
+            var icon_98519ab271b7ce7d93fad30a95dc0440 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ea7d6296fa5353118961593a3d3377a5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1995ec7773ace7e678a367165896612c = $(`<div id="html_1995ec7773ace7e678a367165896612c" style="width: 100.0%; height: 100.0%;">             <div>                 <h4>I-Land-Asia</h4>                 <p>Chembur Mumbai</p>                 <button onclick="updateSidebar(9)" class="btn btn-primary btn-sm">Show Details</button>             </div>         </div>`)[0];
+                popup_ea7d6296fa5353118961593a3d3377a5.setContent(html_1995ec7773ace7e678a367165896612c);
+            
+        
+
+        marker_2c4b50655265c4c58ac6bce91ea8ca6f.bindPopup(popup_ea7d6296fa5353118961593a3d3377a5)
+        ;
+
+        
+    
+    
+                marker_2c4b50655265c4c58ac6bce91ea8ca6f.setIcon(icon_98519ab271b7ce7d93fad30a95dc0440);
+            
+</script>
+</html>

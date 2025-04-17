@@ -24,13 +24,20 @@ const fastify = Fastify({
   }
 });
 
-// Register form body parser - CRITICAL for Twilio webhooks
+// Register form body parser (critical for Twilio webhooks)
 await fastify.register(fastifyFormBody);
 
-// Define env schema
+// Define environment schema
 const schema = {
   type: 'object',
-  required: ['PORT', 'TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_PHONE_NUMBER', 'AGENT_NUMBER', 'BASE_URL'],
+  required: [
+    'PORT',
+    'TWILIO_ACCOUNT_SID',
+    'TWILIO_AUTH_TOKEN',
+    'TWILIO_PHONE_NUMBER',
+    'AGENT_NUMBER',
+    'BASE_URL'
+  ],
   properties: {
     PORT: { type: 'string', default: '3000' },
     TWILIO_ACCOUNT_SID: { type: 'string' },
@@ -41,23 +48,25 @@ const schema = {
   }
 };
 
-// WebSocket connections store
-const connections = new Set();
-
-// Register plugins
 await fastify.register(fastifyEnv, { schema });
 await fastify.register(fastifyWebsocket);
 
-// Serve static files
+// Serve static files from "public" directory
 await fastify.register(fastifyStatic, {
   root: join(__dirname, 'public'),
   prefix: '/'
 });
 
 // Initialize Twilio client
-const twilioClient = twilio(fastify.config.TWILIO_ACCOUNT_SID, fastify.config.TWILIO_AUTH_TOKEN);
+const twilioClient = twilio(
+  fastify.config.TWILIO_ACCOUNT_SID,
+  fastify.config.TWILIO_AUTH_TOKEN
+);
 
-// Log every request and response for debugging
+// In-memory store for WebSocket connections
+const connections = new Set();
+
+// Logging hooks
 fastify.addHook('onRequest', (request, reply, done) => {
   fastify.log.info(`Request received: ${request.method} ${request.url}`);
   done();
@@ -65,33 +74,21 @@ fastify.addHook('onRequest', (request, reply, done) => {
 
 fastify.addHook('preHandler', (request, reply, done) => {
   if (request.body) {
-    fastify.log.debug({
-      url: request.url,
-      method: request.method,
-      contentType: request.headers['content-type'],
-      body: request.body
-    }, 'Request body');
+    fastify.log.debug({ body: request.body }, 'Request body');
   }
   done();
 });
 
-// Routes
+// Serve index.html
 fastify.get('/', async (request, reply) => {
   return reply.sendFile('index.html');
 });
 
-// WebSocket endpoint for transcripts
+// WebSocket endpoint for broadcasting transcripts
 fastify.register(async function (fastify) {
   fastify.get('/ws', { websocket: true }, (connection) => {
     fastify.log.info('WebSocket client connected');
-    
-    // Store the connection
     connections.add(connection);
-    
-    connection.socket.on('message', (message) => {
-      fastify.log.info(`WebSocket message received: ${message}`);
-    });
-    
     connection.socket.on('close', () => {
       fastify.log.info('WebSocket client disconnected');
       connections.delete(connection);
@@ -99,75 +96,76 @@ fastify.register(async function (fastify) {
   });
 });
 
-// Start a conference call
+// Route: Start a conference call using Twilio's built-in transcription
 fastify.post('/call', async (request, reply) => {
   const phoneNumber = request.body.phoneNumber;
-  
   if (!phoneNumber) {
     return reply.code(400).send({ error: 'Phone number is required' });
   }
-  
+
   fastify.log.info(`Starting conference call with ${phoneNumber} and ${fastify.config.AGENT_NUMBER}`);
-  
+
   try {
-    // Generate a unique conference name
     const conferenceName = `conference-${Date.now()}`;
-    
-    // Create TwiML for the customer call
-    // Use streaming transcription for faster results
+    const baseUrl = fastify.config.BASE_URL;
+
+    // Use TwiML to record the conference and request transcription.
+    // Twilio will record from the start of the conference and POST the transcription to our callback endpoint.
     const customerTwiml = `
       <Response>
-        <Say>You are being connected to a conference call with streaming transcription.</Say>
+        <Say>You are being connected to a conference call.</Say>
         <Dial>
-          <Conference statusCallback="${fastify.config.BASE_URL}/conference-status"
-                      statusCallbackEvent="start end join leave"
-                      startConferenceOnEnter="true"
-                      endConferenceOnExit="false"
-                      transcribe="true"
-                      transcribeCallback="${fastify.config.BASE_URL}/transcribe">
+          <Conference record="record-from-start" 
+                      transcriptionCallback="${baseUrl}/transcription-callback" 
+                      startConferenceOnEnter="true" 
+                      endConferenceOnExit="false">
             ${conferenceName}
           </Conference>
         </Dial>
       </Response>
     `;
-    
-    // Create call to customer
+    const agentTwiml = `
+      <Response>
+        <Say>You are being connected to a conference call. Please wait for the customer.</Say>
+        <Dial>
+          <Conference record="record-from-start" 
+                      transcriptionCallback="${baseUrl}/transcription-callback" 
+                      startConferenceOnEnter="true" 
+                      endConferenceOnExit="true">
+            ${conferenceName}
+          </Conference>
+        </Dial>
+      </Response>
+    `;
+
+    // Initiate calls
     const customerCall = await twilioClient.calls.create({
       to: phoneNumber,
       from: fastify.config.TWILIO_PHONE_NUMBER,
       twiml: customerTwiml
     });
-    
     fastify.log.info(`Customer call initiated with SID: ${customerCall.sid}`);
-    
-    // Create call to agent
+
     const agentCall = await twilioClient.calls.create({
       to: fastify.config.AGENT_NUMBER,
       from: fastify.config.TWILIO_PHONE_NUMBER,
-      twiml: `
-        <Response>
-          <Say>You are being connected to a conference call. Please wait for the customer.</Say>
-          <Dial>
-            <Conference startConferenceOnEnter="true" endConferenceOnExit="true">
-              ${conferenceName}
-            </Conference>
-          </Dial>
-        </Response>
-      `
+      twiml: agentTwiml
     });
-    
     fastify.log.info(`Agent call initiated with SID: ${agentCall.sid}`);
-    
-    // Log the call details to a file for debugging
-    fs.appendFileSync('call-log.txt', JSON.stringify({
-      timestamp: new Date().toISOString(),
-      conferenceName,
-      customerCallSid: customerCall.sid,
-      agentCallSid: agentCall.sid,
-      customerPhone: phoneNumber,
-      agentPhone: fastify.config.AGENT_NUMBER
-    }, null, 2) + '\n\n');
-    
+
+    // Log call details for debugging
+    fs.appendFileSync(
+      'call-log.txt',
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        conferenceName,
+        customerCallSid: customerCall.sid,
+        agentCallSid: agentCall.sid,
+        customerPhone: phoneNumber,
+        agentPhone: fastify.config.AGENT_NUMBER
+      }, null, 2) + '\n\n'
+    );
+
     return {
       success: true,
       conferenceName,
@@ -180,72 +178,24 @@ fastify.post('/call', async (request, reply) => {
   }
 });
 
-// Conference status webhook
-fastify.post('/conference-status', async (request, reply) => {
-  fastify.log.info({
-    event: 'conference_status',
-    ...request.body
-  });
-  
-  // Broadcast conference status to all connected WebSocket clients
-  const message = JSON.stringify({
-    type: 'conference_status',
-    status: request.body.StatusCallbackEvent,
-    conferenceName: request.body.FriendlyName,
+// Transcription callback endpoint – Twilio POSTs the transcript here.
+fastify.post('/transcription-callback', async (request, reply) => {
+  // Twilio sends parameters like TranscriptionText, RecordingUrl, etc.
+  const transcriptionText = request.body.TranscriptionText;
+  const recordingUrl = request.body.RecordingUrl;
+  fastify.log.info('Received transcription callback:', { transcriptionText, recordingUrl });
+
+  // Broadcast the transcription via WebSocket
+  const broadcastMsg = JSON.stringify({
+    type: 'transcription',
+    text: transcriptionText,
+    recordingUrl,
     timestamp: new Date().toISOString()
   });
-  
   for (const connection of connections) {
-    connection.socket.send(message);
+    connection.socket.send(broadcastMsg);
   }
-  
-  return { received: true };
-});
-
-// Transcription webhook - Now optimized for streaming
-fastify.post('/transcribe', async (request, reply) => {
-  fastify.log.info('TRANSCRIPTION RECEIVED!');
-  
-  // Log everything about this request
-  fastify.log.info({
-    headers: request.headers,
-    body: request.body,
-    query: request.query
-  });
-  
-  // Save to file for debugging
-  fs.appendFileSync('transcription-log.txt', JSON.stringify({
-    timestamp: new Date().toISOString(),
-    headers: request.headers,
-    body: request.body
-  }, null, 2) + '\n\n');
-  
-  // Extract the transcription text and participant
-  const transcriptionText = request.body.TranscriptionText;
-  const participant = request.body.From === fastify.config.AGENT_NUMBER ? 'Agent' : 'Customer';
-  
-  if (transcriptionText) {
-    fastify.log.info(`Transcription text from ${participant}: ${transcriptionText}`);
-    
-    // Broadcast to all connected WebSocket clients
-    const message = JSON.stringify({
-      type: 'transcription',
-      text: transcriptionText,
-      participant: participant,
-      timestamp: new Date().toISOString(),
-      confidence: request.body.Confidence || 'unknown'
-    });
-    
-    fastify.log.info(`Broadcasting to ${connections.size} clients`);
-    
-    for (const connection of connections) {
-      connection.socket.send(message);
-    }
-  } else {
-    fastify.log.warn('No transcription text received');
-  }
-  
-  return { received: true };
+  reply.send({ received: true });
 });
 
 // Start the server
@@ -253,7 +203,6 @@ try {
   await fastify.listen({ port: fastify.config.PORT, host: '0.0.0.0' });
   console.log(`Server listening on ${fastify.server.address().port}`);
   console.log(`Base URL: ${fastify.config.BASE_URL}`);
-  console.log(`Transcription callback: ${fastify.config.BASE_URL}/transcribe`);
 } catch (err) {
   fastify.log.error(err);
   process.exit(1);

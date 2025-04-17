@@ -368,56 +368,6 @@ export default function ClientDetailPage() {
                   </div>
                 </div>
               </div>
-
-              {/* Location Information */}
-              {client.locations && client.locations.length > 0 && (
-                <div
-                  className={`bg-white rounded-xl shadow-sm overflow-hidden mb-6 ${
-                    isMem0Data
-                      ? "border border-blue-200"
-                      : "border border-gray-100"
-                  }`}
-                >
-                  <div className="p-5 border-b border-gray-100 flex items-center justify-between">
-                    <h3 className="font-bold text-gray-900">
-                      Interested Locations
-                    </h3>
-                    <button className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-blue-600">
-                      <Plus size={16} />
-                    </button>
-                  </div>
-
-                  <div className="h-64">
-                    <MapView locations={client.locations} />
-                  </div>
-
-                  <div className="p-5">
-                    <ul className="space-y-3">
-                      {client.locations.map((location, index) => (
-                        <li
-                          key={index}
-                          className="flex items-center p-3 rounded-lg border border-gray-100 hover:bg-gray-50 group"
-                        >
-                          <div className="p-2 rounded-md bg-blue-50 text-blue-600 mr-3">
-                            <MapPin size={16} />
-                          </div>
-                          <span className="text-sm text-gray-700">
-                            {location.description}
-                          </span>
-                          <button className="ml-auto p-1.5 rounded-lg text-gray-400 opacity-0 group-hover:opacity-100 hover:bg-blue-50 hover:text-blue-600">
-                            <MoreHorizontal size={16} />
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                    <button className="mt-4 w-full py-2 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:text-blue-600 hover:border-blue-300 flex items-center justify-center">
-                      <Plus size={16} className="mr-1" />
-                      Add New Location
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {/* Recommended Properties */}
               <div
                 className={`bg-white rounded-xl shadow-sm overflow-hidden ${
@@ -438,45 +388,7 @@ export default function ClientDetailPage() {
                 <div className="p-5">
                   <div className="grid gap-4">
                     {recommendedProperties.map((property) => (
-                      <div
-                        key={property.id}
-                        className="rounded-xl overflow-hidden border border-gray-100 hover:shadow-md transition-shadow"
-                      >
-                        <div className="relative h-32">
-                          <Image
-                            src={property.images[0]}
-                            alt={property.title}
-                            fill
-                            className="object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-50"></div>
-                          <div className="absolute bottom-2 left-2">
-                            <div className="text-white font-bold text-sm drop-shadow-md">
-                              {property.price >= 10000000
-                                ? `₹${(property.price / 10000000).toFixed(
-                                    2
-                                  )} Cr`
-                                : `₹${(property.price / 100000).toFixed(
-                                    2
-                                  )} Lac`}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="p-3">
-                          <h4 className="font-medium text-gray-900 text-sm line-clamp-1">
-                            {property.title}
-                          </h4>
-                          <div className="flex items-center mt-1 text-xs text-gray-500">
-                            <MapPin size={12} className="mr-1" />
-                            <span className="truncate">
-                              {property.location.city}
-                            </span>
-                            <span className="ml-2 px-1.5 py-0.5 rounded-sm bg-blue-50 text-blue-700">
-                              {property.type}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+                      <PropertyCard key={property.id} property={property} />
                     ))}
                   </div>
                   <Link
@@ -488,10 +400,11 @@ export default function ClientDetailPage() {
                   </Link>
                 </div>
               </div>
+
             </div>
 
             {/* Right Column - Tabs */}
-            <div className="lg:col-span-3">
+            <div className="grid lg:col-span-3 gap-6">
               <div
                 className={`bg-white rounded-xl shadow-sm overflow-hidden ${
                   isMem0Data
@@ -924,6 +837,54 @@ export default function ClientDetailPage() {
                   )}
                 </div>
               </div>
+              {/* Location Information */}
+              {client.locations && client.locations.length > 0 && (
+                <div
+                  className={`bg-white rounded-xl shadow-sm overflow-hidden mb-6 ${
+                    isMem0Data
+                      ? "border border-blue-200"
+                      : "border border-gray-100"
+                  }`}
+                >
+                  <div className="p-5 border-b border-gray-100 flex items-center justify-between">
+                    <h3 className="font-bold text-gray-900">
+                      Interested Locations
+                    </h3>
+                    <button className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-50 hover:text-blue-600">
+                      <Plus size={16} />
+                    </button>
+                  </div>
+
+                  <div className="h-64">
+                    <MapView />
+                  </div>
+
+                  <div className="p-5">
+                    <ul className="space-y-3">
+                      {client.locations.map((location, index) => (
+                        <li
+                          key={index}
+                          className="flex items-center p-3 rounded-lg border border-gray-100 hover:bg-gray-50 group"
+                        >
+                          <div className="p-2 rounded-md bg-blue-50 text-blue-600 mr-3">
+                            <MapPin size={16} />
+                          </div>
+                          <span className="text-sm text-gray-700">
+                            {location.description}
+                          </span>
+                          <button className="ml-auto p-1.5 rounded-lg text-gray-400 opacity-0 group-hover:opacity-100 hover:bg-blue-50 hover:text-blue-600">
+                            <MoreHorizontal size={16} />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                    <button className="mt-4 w-full py-2 border border-dashed border-gray-300 rounded-lg text-sm text-gray-500 hover:text-blue-600 hover:border-blue-300 flex items-center justify-center">
+                      <Plus size={16} className="mr-1" />
+                      Add New Location
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </main>

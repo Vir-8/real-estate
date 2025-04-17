@@ -1,0 +1,493 @@
+<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -> Trust Notebook</span><iframe srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+    
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css&quot;/&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+        &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    
+    
+        &lt;script&gt;
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        &lt;/script&gt;
+    
+    &lt;style&gt;html, body {width: 100%;height: 100%;margin: 0;padding: 0;}&lt;/style&gt;
+    &lt;style&gt;#map {position:absolute;top:0;bottom:0;right:0;left:0;}&lt;/style&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://code.jquery.com/jquery-3.7.1.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css&quot;/&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css&quot;/&gt;
+    
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no&quot; /&gt;
+            &lt;style&gt;
+                #map_2c20aee10c96e0f39b226bd87b82fa6d {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+        
+&lt;/head&gt;
+&lt;body&gt;
+    
+    
+        &lt;script&gt;
+            var locations = [{&quot;place_name&quot;: &quot;Infinity-Mall&quot;, &quot;address&quot;: &quot;Lokhandwala-Complex Andheri-West Mumbai&quot;, &quot;lat&quot;: 19.1336, &quot;lon&quot;: 72.8333, &quot;area_type&quot;: &quot;prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Excellent schools nearby including Ryan-International-School and Vibgyor-High-School&quot;, &quot;public_transport&quot;: &quot;Well connected by bus and metro services Andheri-railway-station is easily accessible&quot;, &quot;local_amenities&quot;: &quot;Numerous restaurants shops and entertainment options available within walking distance&quot;, &quot;zoning_info&quot;: &quot;Commercial zoning allows for retail and entertainment establishments&quot;}}, {&quot;place_name&quot;: &quot;Fun-Republic-Cinema&quot;, &quot;address&quot;: &quot;Shah-Industrial-Estate Andheri-West Mumbai&quot;, &quot;lat&quot;: 19.1401, &quot;lon&quot;: 72.8283, &quot;area_type&quot;: &quot;prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Reputable schools in the vicinity such as Utpal-Shanghvi-Global-School&quot;, &quot;public_transport&quot;: &quot;Close proximity to bus stops and auto-rickshaw stands Andheri-station is a short drive away&quot;, &quot;local_amenities&quot;: &quot;Variety of dining options retail outlets and entertainment venues nearby&quot;, &quot;zoning_info&quot;: &quot;Commercial zone suitable for entertainment and retail businesses&quot;}}, {&quot;place_name&quot;: &quot;Kokilaben-Dhirubhai-Ambani-Hospital&quot;, &quot;address&quot;: &quot;Four-Bungalows Andheri-West Mumbai&quot;, &quot;lat&quot;: 19.1249, &quot;lon&quot;: 72.8263, &quot;area_type&quot;: &quot;prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Several schools in the area including Billabong-High-International-School&quot;, &quot;public_transport&quot;: &quot;Easily accessible by road and public transport Andheri-railway-station is nearby&quot;, &quot;local_amenities&quot;: &quot;Pharmacies restaurants and other essential services are readily available&quot;, &quot;zoning_info&quot;: &quot;Designated for healthcare facilities and related services&quot;}}, {&quot;place_name&quot;: &quot;Andheri-Sports-Complex&quot;, &quot;address&quot;: &quot;Jawahar-Lal-Nehru-Road Andheri-West Mumbai&quot;, &quot;lat&quot;: 19.1287, &quot;lon&quot;: 72.8373, &quot;area_type&quot;: &quot;prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Good schools in the vicinity including Sardar-Patel-College-of-Engineering&quot;, &quot;public_transport&quot;: &quot;Well connected by bus routes and auto-rickshaws Andheri-railway-station is easily accessible&quot;, &quot;local_amenities&quot;: &quot;Restaurants shops and recreational facilities are available in the area&quot;, &quot;zoning_info&quot;: &quot;Zoned for sports and recreational activities&quot;}}, {&quot;place_name&quot;: &quot;Shoppers-Stop&quot;, &quot;address&quot;: &quot;SV-Road Andheri-West Mumbai&quot;, &quot;lat&quot;: 19.1198, &quot;lon&quot;: 72.8344, &quot;area_type&quot;: &quot;prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Numerous schools nearby including Jamnabai-Narsee-School&quot;, &quot;public_transport&quot;: &quot;Excellent connectivity via buses and trains Andheri-railway-station is close by&quot;, &quot;local_amenities&quot;: &quot;Wide range of shopping dining and entertainment options available&quot;, &quot;zoning_info&quot;: &quot;Commercial zoning suitable for retail establishments&quot;}}, {&quot;place_name&quot;: &quot;Infiniti-Mall&quot;, &quot;address&quot;: &quot;Malad-Link-Road Malad-West Mumbai&quot;, &quot;lat&quot;: 19.1863, &quot;lon&quot;: 72.8422, &quot;area_type&quot;: &quot;non-prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Good schools in the vicinity including Ryan-International-School&quot;, &quot;public_transport&quot;: &quot;Well connected by bus and train services Malad-railway-station is nearby&quot;, &quot;local_amenities&quot;: &quot;Variety of restaurants shops and entertainment options available&quot;, &quot;zoning_info&quot;: &quot;Commercial zoning allows for retail and entertainment establishments&quot;}}, {&quot;place_name&quot;: &quot;Inorbit-Mall&quot;, &quot;address&quot;: &quot;Link-Road Malad-West Mumbai&quot;, &quot;lat&quot;: 19.1831, &quot;lon&quot;: 72.8378, &quot;area_type&quot;: &quot;non-prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Several schools in the area including Billabong-High-International-School&quot;, &quot;public_transport&quot;: &quot;Easily accessible by road and public transport Malad-railway-station is nearby&quot;, &quot;local_amenities&quot;: &quot;Pharmacies restaurants and other essential services are readily available&quot;, &quot;zoning_info&quot;: &quot;Designated for commercial and retail activities&quot;}}, {&quot;place_name&quot;: &quot;Hypercity&quot;, &quot;address&quot;: &quot;Malad-Link-Road Malad-West Mumbai&quot;, &quot;lat&quot;: 19.1895, &quot;lon&quot;: 72.8411, &quot;area_type&quot;: &quot;non-prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Reputable schools in the vicinity such as Vibgyor-High-School&quot;, &quot;public_transport&quot;: &quot;Close proximity to bus stops and auto-rickshaw stands Malad-station is a short drive away&quot;, &quot;local_amenities&quot;: &quot;Variety of dining options retail outlets and entertainment venues nearby&quot;, &quot;zoning_info&quot;: &quot;Commercial zone suitable for retail businesses&quot;}}, {&quot;place_name&quot;: &quot;D-Mart&quot;, &quot;address&quot;: &quot;DLH-Road Goregaon-East Mumbai&quot;, &quot;lat&quot;: 19.1652, &quot;lon&quot;: 72.8539, &quot;area_type&quot;: &quot;non-prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Good schools in the vicinity including Oberoi-International-School&quot;, &quot;public_transport&quot;: &quot;Well connected by bus routes and auto-rickshaws Goregaon-railway-station is easily accessible&quot;, &quot;local_amenities&quot;: &quot;Restaurants shops and recreational facilities are available in the area&quot;, &quot;zoning_info&quot;: &quot;Zoned for commercial and retail activities&quot;}}, {&quot;place_name&quot;: &quot;Oberoi-Mall&quot;, &quot;address&quot;: &quot;Western-Express-Highway Goregaon-East Mumbai&quot;, &quot;lat&quot;: 19.1678, &quot;lon&quot;: 72.8511, &quot;area_type&quot;: &quot;non-prime&quot;, &quot;details&quot;: {&quot;school_districts&quot;: &quot;Numerous schools nearby including Ryan-International-School&quot;, &quot;public_transport&quot;: &quot;Excellent connectivity via buses and trains Goregaon-railway-station is close by&quot;, &quot;local_amenities&quot;: &quot;Wide range of shopping dining and entertainment options available&quot;, &quot;zoning_info&quot;: &quot;Commercial zoning suitable for retail establishments&quot;}}];
+            function updateSidebar(idx) {
+                var loc = locations[idx];
+                var content = `
+                    &lt;h3 style=&quot;color: #2c3e50;&quot;&gt;&lt;i class=&quot;fa fa-building&quot;&gt;&lt;/i&gt; ${loc.place_name}&lt;/h3&gt;
+                    &lt;p style=&quot;color: #34495e;&quot;&gt;&lt;i class=&quot;fa fa-map-marker&quot;&gt;&lt;/i&gt; ${loc.address}&lt;/p&gt;
+                    &lt;hr style=&quot;border-top: 2px solid #eee;&quot;&gt;
+                    &lt;div class=&quot;details&quot;&gt;
+                        &lt;p class=&quot;text-muted&quot;&gt;Details in English:&lt;/p&gt;
+                        &lt;p&gt;&lt;b&gt;&lt;i class=&quot;fa fa-school&quot;&gt;&lt;/i&gt; School Districts:&lt;/b&gt;&lt;br&gt;${loc.details.school_districts}&lt;/p&gt;
+                        &lt;p&gt;&lt;b&gt;&lt;i class=&quot;fa fa-bus&quot;&gt;&lt;/i&gt; Public Transportation:&lt;/b&gt;&lt;br&gt;${loc.details.public_transport}&lt;/p&gt;
+                        &lt;p&gt;&lt;b&gt;&lt;i class=&quot;fa fa-store&quot;&gt;&lt;/i&gt; Local Amenities:&lt;/b&gt;&lt;br&gt;${loc.details.local_amenities}&lt;/p&gt;
+                        &lt;p&gt;&lt;b&gt;&lt;i class=&quot;fa fa-building&quot;&gt;&lt;/i&gt; Zoning Information:&lt;/b&gt;&lt;br&gt;${loc.details.zoning_info}&lt;/p&gt;
+                        &lt;p&gt;&lt;b&gt;&lt;i class=&quot;fa fa-star&quot;&gt;&lt;/i&gt; Area Type:&lt;/b&gt; ${loc.area_type}&lt;/p&gt;
+                    &lt;/div&gt;
+                `;
+                document.getElementById(&#x27;sidebar-content&#x27;).innerHTML = content;
+            }
+        &lt;/script&gt;
+    
+    
+            &lt;div class=&quot;folium-map&quot; id=&quot;map_2c20aee10c96e0f39b226bd87b82fa6d&quot; &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_2c20aee10c96e0f39b226bd87b82fa6d = L.map(
+                &quot;map_2c20aee10c96e0f39b226bd87b82fa6d&quot;,
+                {
+                    center: [19.1539, 72.83857],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  &quot;zoom&quot;: 11,
+  &quot;zoomControl&quot;: true,
+  &quot;preferCanvas&quot;: false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_cc8ada76b9b1d1b774ecfb2ec55e19e3 = L.tileLayer(
+                &quot;https://tile.openstreetmap.org/{z}/{x}/{y}.png&quot;,
+                {
+  &quot;minZoom&quot;: 0,
+  &quot;maxZoom&quot;: 19,
+  &quot;maxNativeZoom&quot;: 19,
+  &quot;noWrap&quot;: false,
+  &quot;attribution&quot;: &quot;\u0026copy; \u003ca href=\&quot;https://www.openstreetmap.org/copyright\&quot;\u003eOpenStreetMap\u003c/a\u003e contributors&quot;,
+  &quot;subdomains&quot;: &quot;abc&quot;,
+  &quot;detectRetina&quot;: false,
+  &quot;tms&quot;: false,
+  &quot;opacity&quot;: 1,
+}
+
+            );
+        
+    
+            tile_layer_cc8ada76b9b1d1b774ecfb2ec55e19e3.addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var marker_09d46709f9ab5bd32a71187b0101219c = L.marker(
+                [19.1336, 72.8333],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_afd1b6f282f05cb7d124aaa5895ea36a = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;blue&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_94d2140f02c1a733b0fde09d7d41185a = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_c2cee50633e1ce3a9b92b3fefae910f6 = $(`&lt;div id=&quot;html_c2cee50633e1ce3a9b92b3fefae910f6&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Infinity-Mall&lt;/h4&gt;                 &lt;p&gt;Lokhandwala-Complex Andheri-West Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(0)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_94d2140f02c1a733b0fde09d7d41185a.setContent(html_c2cee50633e1ce3a9b92b3fefae910f6);
+            
+        
+
+        marker_09d46709f9ab5bd32a71187b0101219c.bindPopup(popup_94d2140f02c1a733b0fde09d7d41185a)
+        ;
+
+        
+    
+    
+                marker_09d46709f9ab5bd32a71187b0101219c.setIcon(icon_afd1b6f282f05cb7d124aaa5895ea36a);
+            
+    
+            var marker_514253ce45cdc513a41c1e77f81c4ed5 = L.marker(
+                [19.1401, 72.8283],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_2b6d811ac8c4d5ad7425eb30e13192e9 = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;blue&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_78292cea201ebc18f5ad274bf6306702 = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_a96f7c9ceb435e632defa06884595e59 = $(`&lt;div id=&quot;html_a96f7c9ceb435e632defa06884595e59&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Fun-Republic-Cinema&lt;/h4&gt;                 &lt;p&gt;Shah-Industrial-Estate Andheri-West Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(1)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_78292cea201ebc18f5ad274bf6306702.setContent(html_a96f7c9ceb435e632defa06884595e59);
+            
+        
+
+        marker_514253ce45cdc513a41c1e77f81c4ed5.bindPopup(popup_78292cea201ebc18f5ad274bf6306702)
+        ;
+
+        
+    
+    
+                marker_514253ce45cdc513a41c1e77f81c4ed5.setIcon(icon_2b6d811ac8c4d5ad7425eb30e13192e9);
+            
+    
+            var marker_56fa870bd503e631912bc1a145891329 = L.marker(
+                [19.1249, 72.8263],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_22111039b3b920ae5dbc248ec8aeeaeb = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;blue&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_778a4b92374195b46f72b8f6e54b1c87 = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_462db765177088cf33f730b7f3e5d228 = $(`&lt;div id=&quot;html_462db765177088cf33f730b7f3e5d228&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Kokilaben-Dhirubhai-Ambani-Hospital&lt;/h4&gt;                 &lt;p&gt;Four-Bungalows Andheri-West Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(2)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_778a4b92374195b46f72b8f6e54b1c87.setContent(html_462db765177088cf33f730b7f3e5d228);
+            
+        
+
+        marker_56fa870bd503e631912bc1a145891329.bindPopup(popup_778a4b92374195b46f72b8f6e54b1c87)
+        ;
+
+        
+    
+    
+                marker_56fa870bd503e631912bc1a145891329.setIcon(icon_22111039b3b920ae5dbc248ec8aeeaeb);
+            
+    
+            var marker_2472b45c11e973bb18917a733c73e11e = L.marker(
+                [19.1287, 72.8373],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_b84c3f260b9b81ab3fcb7d9f3f070121 = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;blue&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_1a9bd3583db0b550fa5206a588d568e4 = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_f3e684aeeaffc14f8c742af794d72c68 = $(`&lt;div id=&quot;html_f3e684aeeaffc14f8c742af794d72c68&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Andheri-Sports-Complex&lt;/h4&gt;                 &lt;p&gt;Jawahar-Lal-Nehru-Road Andheri-West Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(3)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_1a9bd3583db0b550fa5206a588d568e4.setContent(html_f3e684aeeaffc14f8c742af794d72c68);
+            
+        
+
+        marker_2472b45c11e973bb18917a733c73e11e.bindPopup(popup_1a9bd3583db0b550fa5206a588d568e4)
+        ;
+
+        
+    
+    
+                marker_2472b45c11e973bb18917a733c73e11e.setIcon(icon_b84c3f260b9b81ab3fcb7d9f3f070121);
+            
+    
+            var marker_03c7b8213f426df39a4df2a09e49ee51 = L.marker(
+                [19.1198, 72.8344],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_c2a4a41cb42c313bfe032df408ff7484 = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;blue&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_c28074c6901c13713243099426f6f319 = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_7b8988f2f0ee6651b25c6658b4949d4b = $(`&lt;div id=&quot;html_7b8988f2f0ee6651b25c6658b4949d4b&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Shoppers-Stop&lt;/h4&gt;                 &lt;p&gt;SV-Road Andheri-West Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(4)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_c28074c6901c13713243099426f6f319.setContent(html_7b8988f2f0ee6651b25c6658b4949d4b);
+            
+        
+
+        marker_03c7b8213f426df39a4df2a09e49ee51.bindPopup(popup_c28074c6901c13713243099426f6f319)
+        ;
+
+        
+    
+    
+                marker_03c7b8213f426df39a4df2a09e49ee51.setIcon(icon_c2a4a41cb42c313bfe032df408ff7484);
+            
+    
+            var marker_bf6d4cc5a599eee77880030fa3f7a82c = L.marker(
+                [19.1863, 72.8422],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_faa5c178d962a264b0fcb0b2e13d7395 = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;orange&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_02042ae9139b6fb6f97dbe2e63483a4d = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_b5a074b1784363d44e2c690799b573fa = $(`&lt;div id=&quot;html_b5a074b1784363d44e2c690799b573fa&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Infiniti-Mall&lt;/h4&gt;                 &lt;p&gt;Malad-Link-Road Malad-West Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(5)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_02042ae9139b6fb6f97dbe2e63483a4d.setContent(html_b5a074b1784363d44e2c690799b573fa);
+            
+        
+
+        marker_bf6d4cc5a599eee77880030fa3f7a82c.bindPopup(popup_02042ae9139b6fb6f97dbe2e63483a4d)
+        ;
+
+        
+    
+    
+                marker_bf6d4cc5a599eee77880030fa3f7a82c.setIcon(icon_faa5c178d962a264b0fcb0b2e13d7395);
+            
+    
+            var marker_c882ffe5ac22794a7c13490ae4c8ee12 = L.marker(
+                [19.1831, 72.8378],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_f23b33ea17215e46ff5b7826573bba5e = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;orange&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_0487af7ae3daf1fda7e0abc1f77fe172 = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_aa082713e5d55cca2c284ffb8e06897f = $(`&lt;div id=&quot;html_aa082713e5d55cca2c284ffb8e06897f&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Inorbit-Mall&lt;/h4&gt;                 &lt;p&gt;Link-Road Malad-West Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(6)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_0487af7ae3daf1fda7e0abc1f77fe172.setContent(html_aa082713e5d55cca2c284ffb8e06897f);
+            
+        
+
+        marker_c882ffe5ac22794a7c13490ae4c8ee12.bindPopup(popup_0487af7ae3daf1fda7e0abc1f77fe172)
+        ;
+
+        
+    
+    
+                marker_c882ffe5ac22794a7c13490ae4c8ee12.setIcon(icon_f23b33ea17215e46ff5b7826573bba5e);
+            
+    
+            var marker_b0d5acabb6c17b547988b94301519bea = L.marker(
+                [19.1895, 72.8411],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_456ee464595189e8d09e3e737f54cbe6 = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;orange&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_8c74963a9151ef3b95d3b767437f4580 = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_c061f63190408f92799799be011999df = $(`&lt;div id=&quot;html_c061f63190408f92799799be011999df&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Hypercity&lt;/h4&gt;                 &lt;p&gt;Malad-Link-Road Malad-West Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(7)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_8c74963a9151ef3b95d3b767437f4580.setContent(html_c061f63190408f92799799be011999df);
+            
+        
+
+        marker_b0d5acabb6c17b547988b94301519bea.bindPopup(popup_8c74963a9151ef3b95d3b767437f4580)
+        ;
+
+        
+    
+    
+                marker_b0d5acabb6c17b547988b94301519bea.setIcon(icon_456ee464595189e8d09e3e737f54cbe6);
+            
+    
+            var marker_8da5f2032452ad9b6b0350f633deada2 = L.marker(
+                [19.1652, 72.8539],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_57d18f1cda1fc318bf9be147b696b365 = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;orange&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_90abfedb5a897ad97c2d1a8119e08b31 = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_567bcb86ca83b88487e43ddc5c2b28f0 = $(`&lt;div id=&quot;html_567bcb86ca83b88487e43ddc5c2b28f0&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;D-Mart&lt;/h4&gt;                 &lt;p&gt;DLH-Road Goregaon-East Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(8)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_90abfedb5a897ad97c2d1a8119e08b31.setContent(html_567bcb86ca83b88487e43ddc5c2b28f0);
+            
+        
+
+        marker_8da5f2032452ad9b6b0350f633deada2.bindPopup(popup_90abfedb5a897ad97c2d1a8119e08b31)
+        ;
+
+        
+    
+    
+                marker_8da5f2032452ad9b6b0350f633deada2.setIcon(icon_57d18f1cda1fc318bf9be147b696b365);
+            
+    
+            var marker_f3b9ab78a6e43ca143917a0dc3a9a132 = L.marker(
+                [19.1678, 72.8511],
+                {
+}
+            ).addTo(map_2c20aee10c96e0f39b226bd87b82fa6d);
+        
+    
+            var icon_b6a9800ecb671eede5220be477676073 = L.AwesomeMarkers.icon(
+                {
+  &quot;markerColor&quot;: &quot;orange&quot;,
+  &quot;iconColor&quot;: &quot;white&quot;,
+  &quot;icon&quot;: &quot;map-marker&quot;,
+  &quot;prefix&quot;: &quot;fa&quot;,
+  &quot;extraClasses&quot;: &quot;fa-rotate-0&quot;,
+}
+            );
+        
+    
+        var popup_1054c3db846d7adf283ba9d6acd28c37 = L.popup({
+  &quot;maxWidth&quot;: 300,
+});
+
+        
+            
+                var html_3b26cab983394f6d8511937737a57201 = $(`&lt;div id=&quot;html_3b26cab983394f6d8511937737a57201&quot; style=&quot;width: 100.0%; height: 100.0%;&quot;&gt;             &lt;div&gt;                 &lt;h4&gt;Oberoi-Mall&lt;/h4&gt;                 &lt;p&gt;Western-Express-Highway Goregaon-East Mumbai&lt;/p&gt;                 &lt;button onclick=&quot;updateSidebar(9)&quot; class=&quot;btn btn-primary btn-sm&quot;&gt;Show Details&lt;/button&gt;             &lt;/div&gt;         &lt;/div&gt;`)[0];
+                popup_1054c3db846d7adf283ba9d6acd28c37.setContent(html_3b26cab983394f6d8511937737a57201);
+            
+        
+
+        marker_f3b9ab78a6e43ca143917a0dc3a9a132.bindPopup(popup_1054c3db846d7adf283ba9d6acd28c37)
+        ;
+
+        
+    
+    
+                marker_f3b9ab78a6e43ca143917a0dc3a9a132.setIcon(icon_b6a9800ecb671eede5220be477676073);
+            
+&lt;/script&gt;
+&lt;/html&gt;" style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div></div>
