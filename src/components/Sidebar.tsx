@@ -23,7 +23,7 @@ export default function Sidebar() {
     { name: 'Clients', href: '/clients', icon: Users },
     { name: 'Conversations', href: '/conversations', icon: MessageSquare },
     { name: 'Properties', href: '/properties', icon: Building },
-    { name: 'Analytics', icon: PieChart },
+    { name: 'Analytics', href: '/analytics', icon: PieChart },
     { name: 'Settings', icon: Settings },
   ];
 

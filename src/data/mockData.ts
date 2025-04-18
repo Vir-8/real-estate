@@ -458,3 +458,87 @@ export const conversations: Record<string, ConversationMessage[]> = {
     }
   ]
 };
+
+// Mock financial data for analytics
+export const financialData = {
+  // Monthly revenue data (last 12 months)
+  monthlyRevenue: [
+    { month: 'Jan', revenue: 5400000, target: 5000000 },
+    { month: 'Feb', revenue: 4800000, target: 5000000 },
+    { month: 'Mar', revenue: 6200000, target: 5500000 },
+    { month: 'Apr', revenue: 7100000, target: 5500000 },
+    { month: 'May', revenue: 5900000, target: 6000000 },
+    { month: 'Jun', revenue: 6800000, target: 6000000 },
+    { month: 'Jul', revenue: 7300000, target: 6500000 },
+    { month: 'Aug', revenue: 6750000, target: 6500000 },
+    { month: 'Sep', revenue: 8100000, target: 7000000 },
+    { month: 'Oct', revenue: 9200000, target: 7000000 },
+    { month: 'Nov', revenue: 8500000, target: 7500000 },
+    { month: 'Dec', revenue: 9800000, target: 7500000 },
+  ],
+  
+  // Property sales by type
+  salesByType: [
+    { type: '1BHK', count: 24, value: 14400000 },
+    { type: '2BHK', count: 42, value: 33600000 },
+    { type: '3BHK', count: 35, value: 35000000 },
+    { type: '4BHK', count: 18, value: 27000000 },
+    { type: 'Villa', count: 8, value: 36000000 },
+    { type: 'Plot', count: 12, value: 18000000 },
+    { type: 'Commercial', count: 6, value: 42000000 },
+    { type: 'PentHouse', count: 4, value: 32000000 },
+  ],
+  
+  // Sales by location
+  salesByLocation: [
+    { location: 'Mumbai', count: 65, value: 97500000 },
+    { location: 'Pune', count: 32, value: 35200000 },
+    { location: 'Bangalore', count: 28, value: 42000000 },
+    { location: 'Delhi NCR', count: 25, value: 41250000 },
+    { location: 'Hyderabad', count: 22, value: 33000000 },
+  ],
+  
+  // Agent performance data
+  agentPerformance: [
+    { name: 'Aditya Rao', sales: 28, value: 56000000, commission: 1680000, target: 50000000 },
+    { name: 'Sneha Verma', sales: 24, value: 42000000, commission: 1260000, target: 45000000 },
+    { name: 'Raj Kapoor', sales: 19, value: 38000000, commission: 1140000, target: 40000000 },
+    { name: 'Neha Singh', sales: 21, value: 34000000, commission: 1020000, target: 40000000 },
+    { name: 'Arjun Mehta', sales: 16, value: 28000000, commission: 840000, target: 35000000 },
+  ],
+  
+  // Recurring income (rent collections, maintenance fees)
+  recurringIncome: {
+    rentCollections: 3450000,
+    maintenanceFees: 980000,
+    propertyManagement: 650000
+  },
+  
+  // Top performing properties
+  topProperties: [
+    { id: 'p17', title: 'Luxury Villa in Jubilee Hills', type: 'Villa', daysToSell: 34, profit: 2800000, roi: 18.6 },
+    { id: 'p24', title: 'Commercial Space in BKC', type: 'Commercial', daysToSell: 41, profit: 2300000, roi: 15.3 },
+    { id: 'p12', title: '4BHK Apartment in South Mumbai', type: '4BHK', daysToSell: 29, profit: 1900000, roi: 14.2 },
+    { id: 'p33', title: 'PentHouse in Koregaon Park', type: 'PentHouse', daysToSell: 38, profit: 1750000, roi: 13.8 },
+    { id: 'p28', title: '3BHK in Indiranagar', type: '3BHK', daysToSell: 22, profit: 1600000, roi: 12.5 },
+  ],
+  
+  // Current year summary
+  annualSummary: {
+    totalRevenue: 82000000,
+    totalExpenses: 23400000,
+    netProfit: 58600000,
+    targetRevenue: 95000000,
+    averageDaysToSell: 42,
+    conversionRate: 28.5, // percentage of leads converted to sales
+    customerAcquisitionCost: 84500
+  },
+  
+  // Quarterly data
+  quarterlyData: [
+    { quarter: 'Q1', revenue: 16400000, expenses: 5200000, profit: 11200000 },
+    { quarter: 'Q2', revenue: 19800000, expenses: 5800000, profit: 14000000 },
+    { quarter: 'Q3', revenue: 22150000, expenses: 6100000, profit: 16050000 },
+    { quarter: 'Q4', revenue: 23650000, expenses: 6300000, profit: 17350000 },
+  ]
+};
