@@ -11,6 +11,8 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 // Import WebSocket client library for Deepgram connection
 import WebSocket from 'ws';
+// Import our transcript processing module
+import { processRealEstateConversation } from './processTranscript.js';
 
 dotenv.config();
 
@@ -219,6 +221,8 @@ fastify.register(async function (fastify) {
           // Use a simple timestamp-based ID (adjust as needed).
           const transcriptionId = Date.now().toString();
           
+          fastify.log.info(`Received transcript from Deepgram: ${transcript} (${messageType})`);
+          
           const broadcastMsg = JSON.stringify({
             type: 'transcription',
             text: transcript,
@@ -231,6 +235,7 @@ fastify.register(async function (fastify) {
           // Broadcast to all connected browser clients.
           for (const conn of connections) {
             conn.socket.send(broadcastMsg);
+            fastify.log.info(`Sent transcript to client: ${transcript}`);
           }
         }
       } catch (err) {
@@ -246,6 +251,19 @@ fastify.register(async function (fastify) {
       fastify.log.info('Twilio Media Stream connection closed');
       if (deepgramWs.readyState === WebSocket.OPEN || deepgramWs.readyState === WebSocket.CONNECTING) {
         deepgramWs.close();
+      }
+      
+      // Send conference end status to all connected clients
+      const endMsg = JSON.stringify({
+        type: 'conference_status',
+        status: 'ended',
+        conferenceName: 'conference-' + Date.now(),
+        timestamp: new Date().toISOString()
+      });
+      
+      fastify.log.info('Sending conference end status to clients');
+      for (const conn of connections) {
+        conn.socket.send(endMsg);
       }
     });
 
@@ -366,6 +384,40 @@ fastify.post('/transcription-callback', async (request, reply) => {
     connection.socket.send(broadcastMsg);
   }
   reply.send({ received: true });
+});
+
+// Add new endpoint for processing transcripts
+fastify.post('/process-transcript', async (request, reply) => {
+  const { transcripts } = request.body;
+  
+  if (!transcripts || !Array.isArray(transcripts)) {
+    return reply.code(400).send({ error: 'Transcripts array is required' });
+  }
+  
+  try {
+    // Convert array of transcript objects to a single string for processing
+    const transcriptTexts = transcripts.map(t => {
+      // Include speaker info if available
+      if (t.participant) {
+        return `${t.participant}: ${t.text}`;
+      }
+      return t.text;
+    });
+    
+    // Process the transcripts
+    const result = await processRealEstateConversation(transcriptTexts);
+    
+    fastify.log.info(`Processed ${transcripts.length} transcript entries`);
+    
+    return {
+      success: true,
+      structuredData: result.structuredData,
+      formattedOutput: result.formattedOutput
+    };
+  } catch (error) {
+    fastify.log.error(error, 'Failed to process transcripts');
+    return reply.code(500).send({ error: error.message });
+  }
 });
 
 // Start the server

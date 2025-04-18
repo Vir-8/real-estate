@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Client } from '@/types';
-import { 
-  initializeMem0, 
-  fetchAllMem0UsersWithMemories, 
-  fetchMem0ClientDetail,
-  searchMem0UserMemories
-} from '@/lib/mem0Service';
 
 interface UseMem0Props {
-  apiKey?: string;
-  googleApiKey?: string;
   autoFetch?: boolean;
 }
 
@@ -24,53 +16,26 @@ interface UseMem0Return {
 }
 
 /**
- * Enhanced hook to initialize and fetch data from Mem0
+ * Hook to interact with Mem0 through the server-side API
  */
-export const useMem0 = ({ 
-  apiKey = process.env.NEXT_PUBLIC_MEM0_API_KEY, 
-  googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_AI_API_KEY,
-  autoFetch = true 
-}: UseMem0Props = {}): UseMem0Return => {
+export const useMem0 = ({ autoFetch = true }: UseMem0Props = {}): UseMem0Return => {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
-  const [initialized, setInitialized] = useState<boolean>(false);
-
-  // Initialize the Mem0 client
-  useEffect(() => {
-    if (!apiKey) {
-      setError(new Error('Mem0 API key not provided'));
-      return;
-    }
-
-    const initialize = async () => {
-      try {
-        await initializeMem0(apiKey, googleApiKey || '');
-        setInitialized(true);
-        
-        if (autoFetch) {
-          await fetchClients();
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to initialize Mem0'));
-      }
-    };
-
-    initialize();
-  }, [apiKey, googleApiKey]);
+  const [initialized, setInitialized] = useState<boolean>(true); // Always true since initialization is handled server-side
 
   // Function to fetch clients from Mem0
   const fetchClients = async () => {
-    if (!initialized) {
-      return;
-    }
-
     setLoading(true);
     setError(null);
 
     try {
-      const mem0Clients = await fetchAllMem0UsersWithMemories();
-      setClients(mem0Clients);
+      const response = await fetch('/api/mem0');
+      if (!response.ok) {
+        throw new Error('Failed to fetch clients');
+      }
+      const data = await response.json();
+      setClients(data);
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to fetch clients from Mem0'));
     } finally {
@@ -80,16 +45,16 @@ export const useMem0 = ({
   
   // Function to fetch a single client with detailed information
   const fetchClientDetail = async (userId: string): Promise<Client | null> => {
-    if (!initialized) {
-      return null;
-    }
-    
     setLoading(true);
     setError(null);
     
     try {
-      const clientDetail = await fetchMem0ClientDetail(userId);
-      return clientDetail;
+      const response = await fetch(`/api/mem0?userId=${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch client detail');
+      }
+      const data = await response.json();
+      return data;
     } catch (err) {
       setError(err instanceof Error ? err : new Error(`Failed to fetch client detail for ${userId}`));
       return null;
@@ -100,16 +65,16 @@ export const useMem0 = ({
   
   // Function to search memories for a specific client
   const searchMemories = async (userId: string, query: string) => {
-    if (!initialized) {
-      return [];
-    }
-    
     setLoading(true);
     setError(null);
     
     try {
-      const memories = await searchMem0UserMemories(userId, query);
-      return memories;
+      const response = await fetch(`/api/mem0?userId=${userId}&query=${encodeURIComponent(query)}`);
+      if (!response.ok) {
+        throw new Error('Failed to search memories');
+      }
+      const data = await response.json();
+      return data;
     } catch (err) {
       setError(err instanceof Error ? err : new Error(`Failed to search memories for ${userId}`));
       return [];
@@ -117,6 +82,13 @@ export const useMem0 = ({
       setLoading(false);
     }
   };
+
+  // Auto-fetch clients on mount if enabled
+  useEffect(() => {
+    if (autoFetch) {
+      fetchClients();
+    }
+  }, [autoFetch]);
 
   return {
     clients,

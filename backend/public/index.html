@@ -106,6 +106,45 @@
       border: 1px dashed #ffb74d;
       display: none;
     }
+    
+    #processTranscriptBtn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 15px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: none;
+    }
+    
+    #processTranscriptBtn:hover {
+      background-color: #45a049;
+    }
+    
+    #processedContainer {
+      margin-top: 20px;
+      display: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 15px;
+    }
+    
+    .client {
+      background-color: #f1f8e9;
+      border-left: 4px solid #8bc34a;
+    }
+    
+    .agent {
+      background-color: #e3f2fd;
+      border-left: 4px solid #2196F3;
+    }
+    
+    .processed-entry {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -125,6 +164,13 @@
     <p>Conference call transcription will appear here...</p>
   </div>
   
+  <button id="processTranscriptBtn">Process Real Estate Conversation</button>
+  
+  <div id="processedContainer">
+    <h2>Processed Conversation</h2>
+    <div id="processedContent"></div>
+  </div>
+  
   <script>
     let socket;
     let reconnectInterval;
@@ -132,6 +178,12 @@
     const transcriptContainer = document.getElementById('transcriptContainer');
     const statusMessage = document.getElementById('statusMessage');
     const wsStatus = document.getElementById('wsStatus');
+    const processBtn = document.getElementById('processTranscriptBtn');
+    const processedContainer = document.getElementById('processedContainer');
+    const processedContent = document.getElementById('processedContent');
+    
+    // Store all final transcript entries
+    let finalTranscriptEntries = [];
     
     // Helper function to show status messages
     function showStatus(message, type) {
@@ -148,6 +200,12 @@
       entry.textContent = message;
       transcriptContainer.appendChild(entry);
       transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
+      
+      // If call ended message, show the process button
+      if (message.includes('ended') || message.includes('completed')) {
+        console.log('Call ended detected, showing process button');
+        processBtn.style.display = 'block';
+      }
     }
     
     // Update or create a partial transcript
@@ -173,8 +231,21 @@
     }
     
     // Finalize a transcript (remove partial styling and make permanent)
-    function finalizeTranscript(id, text, speakerInfo, className) {
+    function finalizeTranscript(id, text, speakerInfo, className, participant, timestamp) {
       let existingElem = document.getElementById(`partial-${id}`);
+      
+      // Create final transcript data
+      const transcriptEntry = {
+        id,
+        text,
+        participant,
+        timestamp: timestamp || new Date().toISOString()
+      };
+      
+      // Add to our stored final entries
+      finalTranscriptEntries.push(transcriptEntry);
+      console.log('Added transcript entry:', transcriptEntry);
+      console.log('Total entries:', finalTranscriptEntries.length);
       
       if (existingElem) {
         // Update existing element to final state
@@ -223,12 +294,13 @@
       };
       
       socket.onmessage = function(event) {
-        console.log(`WebSocket message received`);
+        console.log(`WebSocket message received:`, event.data);
         
         try {
           const data = JSON.parse(event.data);
           
           if (data.type === 'transcription' && data.text) {
+            console.log('Processing transcription:', data);
             const time = new Date(data.timestamp).toLocaleTimeString();
             const participantClass = data.participant ? data.participant.toLowerCase() : 'unknown';
             const speakerInfo = data.participant ? `${time} - ${data.participant}` : 
@@ -240,6 +312,7 @@
             
             // Store transcript data
             if (data.messageType === 'partial') {
+              console.log('Processing partial transcript:', transcriptId);
               // Track this partial transcript
               partialTranscripts[transcriptId] = {
                 text: data.text,
@@ -249,16 +322,38 @@
               
               // Update the UI with the partial transcript
               updatePartialTranscript(transcriptId, data.text, speakerInfo, participantClass);
+              
+              // Also add to final entries if not already present
+              const existingEntry = finalTranscriptEntries.find(entry => entry.id === transcriptId);
+              if (!existingEntry) {
+                finalTranscriptEntries.push({
+                  id: transcriptId,
+                  text: data.text,
+                  participant: data.participant,
+                  timestamp: data.timestamp
+                });
+                console.log('Added partial transcript to final entries');
+                console.log('Total entries:', finalTranscriptEntries.length);
+              }
             } 
             else {
+              console.log('Processing final transcript:', transcriptId);
               // This is a final transcript
-              finalizeTranscript(transcriptId, data.text, speakerInfo, participantClass);
+              finalizeTranscript(transcriptId, data.text, speakerInfo, participantClass, data.participant, data.timestamp);
             }
             
             transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
           }
           else if (data.type === 'conference_status') {
+            console.log('Conference status received:', data);
             addInfoMessage(`Conference ${data.status}: ${data.conferenceName} at ${new Date(data.timestamp).toLocaleTimeString()}`);
+            
+            // Show process button if conference has ended
+            if (data.status === 'ended' || data.status === 'completed') {
+              console.log('Conference ended, showing process button');
+              console.log('Current transcript entries:', finalTranscriptEntries);
+              processBtn.style.display = 'block';
+            }
           }
         } catch (error) {
           console.error(`Error parsing message: ${error.message}`);
@@ -315,10 +410,73 @@
         showStatus(`Conference call initiated!`, 'success');
         addInfoMessage(`Conference started: ${data.conferenceName}`);
         
+        // Reset the processed content and hide it
+        processedContainer.style.display = 'none';
+        processedContent.innerHTML = '';
+        processBtn.style.display = 'none';
+        
+        // Clear previous transcript entries
+        finalTranscriptEntries = [];
+        console.log('Cleared previous transcript entries');
+        
       } catch (error) {
         console.error(`Error starting call: ${error.message}`);
         showStatus(`Error starting call: ${error.message}`, 'error');
       }
+    });
+    
+    // Process transcript button 
+    processBtn.addEventListener('click', async function() {
+      console.log('Process button clicked');
+      console.log('Current transcript entries:', finalTranscriptEntries);
+      
+      if (finalTranscriptEntries.length === 0) {
+        showStatus('No transcript entries to process', 'error');
+        return;
+      }
+      
+      showStatus('Processing transcript...', 'info');
+      processBtn.disabled = true;
+      
+      try {
+        const response = await fetch('/process-transcript', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ transcripts: finalTranscriptEntries })
+        });
+        
+        const data = await response.json();
+        
+        if (data.error) {
+          showStatus(`Error: ${data.error}`, 'error');
+          processBtn.disabled = false;
+          return;
+        }
+        
+        // Display the processed result
+        processedContainer.style.display = 'block';
+        processedContent.innerHTML = '';
+        
+        // Add each conversation turn to the processed content
+        data.structuredData.conversation.forEach(turn => {
+          const entry = document.createElement('div');
+          entry.className = `processed-entry ${turn.speaker.toLowerCase()}`;
+          entry.innerHTML = `
+            <div style="font-size: 12px; color: #666;">${turn.speaker}</div>
+            <div>${turn.text}</div>
+          `;
+          processedContent.appendChild(entry);
+        });
+        
+        showStatus('Transcript processed successfully!', 'success');
+      } catch (error) {
+        console.error(`Error processing transcript: ${error.message}`);
+        showStatus(`Error processing transcript: ${error.message}`, 'error');
+      }
+      
+      processBtn.disabled = false;
     });
     
     // Connect to WebSocket on page load
