@@ -383,37 +383,23 @@ function formatConversation(parsedResult) {
  * @returns {Promise<Object>} Result with structured data and formatted output
  */
 async function processRealEstateConversation(inputText) {
-  try {
-    // Convert transcript entries to mem0ai message format
-    const messages = inputText.map(entry => ({
-      role: entry.participant === 'client' ? 'user' : 'assistant',
-      content: entry.text
-    }));
-    
-    console.log('Processing messages with mem0ai:', messages);
-    
-    // Add messages to mem0ai
-    await mem0.add(messages, user_id="real_estate_client");
-    
-    // Get the processed conversation
-    const processed = await mem0.get(user_id="real_estate_client");
-    
-    // Format the conversation for display
-    const formatted = processed.messages.map(msg => ({
-      speaker: msg.role === 'user' ? 'Client' : 'Agent',
-      text: msg.content
-    }));
-    
-    return {
-      structuredData: {
-        conversation: formatted
-      },
-      formattedOutput: formatted.map(turn => `${turn.speaker}: ${turn.text}`).join('\n')
-    };
-  } catch (error) {
-    console.error('Error processing with mem0ai:', error);
-    throw error;
-  }
+  // Parse the conversation
+  const parsed = await parseTranscription(inputText);
+  
+  // Format the conversation
+  const formatted = formatConversation(parsed);
+  
+  const messages = parsed.conversation.map(entry => ({
+    role: entry.speaker.toLowerCase() === 'client' ? 'user' : 'assistant',
+    content: entry.text
+  }));
+  console.log(messages);
+  await mem0.add(messages, { user_id: "real_estate_client" });
+
+  return {
+    structuredData: parsed,
+    formattedOutput: formatted
+  };
 }
 
 export { 
