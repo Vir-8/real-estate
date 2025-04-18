@@ -469,7 +469,7 @@ export default function ConversationsPage() {
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-purple-600">
-                          {Object.values(conversations).reduce((sum, msgs) => sum + msgs.length, 0)}
+                          {Object.values(conversations).reduce<number>((sum, msgs) => sum + (msgs as ConversationMessage[]).length, 0)}
                         </div>
                         <div className="text-xs text-gray-500">Total Messages</div>
                       </div>

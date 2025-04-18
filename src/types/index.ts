@@ -1,12 +1,12 @@
 export type Language = 'English' | 'Hindi' | 'Marathi' | 'Telugu' | 'Mixed';
 
 export type ClientMemory = {
-  id: string;
-  type: 'location' | 'preference' | 'budget' | 'contact' | 'note' | 'interaction';
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  language: Language;
+  id?: string;
+  type?: 'location' | 'preference' | 'budget' | 'contact' | 'note' | 'interaction';
+  content?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  language?: Language;
   translatedContent?: string;
 };
 

@@ -78,7 +78,7 @@ export default function ClientDetailPage() {
     // Find recommended properties based on client preferences
     if (foundClient) {
       const clientPreferences = foundClient.memories.filter(
-        (m: { type: string }) => m.type === "preference"
+        (m) => m.type === "preference"
       );
       const preferenceContent = clientPreferences
         .map((p: any) => p.translatedContent || p.content)

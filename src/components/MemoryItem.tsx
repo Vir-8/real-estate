@@ -85,20 +85,20 @@ export default function MemoryItem({ memory, isMem0Data = false }: MemoryItemPro
     }
   };
 
-  const colors = getMemoryColor(memory.type);
+  const colors = getMemoryColor(memory.type || 'note');
 
   return (
     <div className={`rounded-xl p-5 shadow-sm ${colors.bg} ${colors.border} border group relative transition-all hover:shadow-md ${isPinned ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}>      
       <div className="flex items-start">
         <div className={`p-3 rounded-xl mr-4 ${colors.icon}`}>
-          {getMemoryIcon(memory.type)}
+          {getMemoryIcon(memory.type || 'note')}
         </div>
         
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <div className="flex items-center flex-wrap gap-2">
               <span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${colors.tag}`}>
-                {memory.type}
+                {memory.type || 'Note'}
               </span>
               {isPinned && (
                 <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
@@ -113,7 +113,7 @@ export default function MemoryItem({ memory, isMem0Data = false }: MemoryItemPro
             <div className="flex items-center">
               <span className="text-xs text-gray-500 flex items-center mr-2">
                 <Clock size={12} className="mr-1" />
-                {format(new Date(memory.createdAt), 'MMM d, yyyy')}
+                {format(new Date(memory.createdAt || new Date()), 'MMM d, yyyy')}
               </span>
               
               <button 
