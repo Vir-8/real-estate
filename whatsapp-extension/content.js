@@ -4,9 +4,12 @@ let isEnabled = false;
 let observerActive = false;
 let observer = null;
 let processedMessages = new Set();
+let translatedMessages = new Set(); // Track messages that already have translation buttons
 
-// We'll use Chrome's background script to handle API calls
-// instead of making them directly from the content script
+// Helper to check if Chrome runtime is available
+function isChromeRuntimeAvailable() {
+  return typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id;
+}
 
 // Listen for messages from popup
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
@@ -168,6 +171,12 @@ function isMessageOutgoing(messageElement) {
 
 // Function to send message to mem0 via background script
 function sendToMem0(sender, messageText, isOutgoing) {
+  // Check if Chrome runtime is available
+  if (!isChromeRuntimeAvailable()) {
+    console.error('Extension context invalidated. Cannot send to mem0.');
+    return;
+  }
+  
   // Get the first word of sender for user_id as requested
   const user_id = isOutgoing ? "real_estate_agent" : sender.split(' ')[0];
 
@@ -187,6 +196,8 @@ function sendToMem0(sender, messageText, isOutgoing) {
     action: 'sendToMem0',
     data: memoryData
   }, function(response) {
+    if (!isChromeRuntimeAvailable()) return;
+    
     if (chrome.runtime.lastError) {
       console.error('Error sending to background:', chrome.runtime.lastError);
     } else if (response && response.error) {
@@ -195,6 +206,103 @@ function sendToMem0(sender, messageText, isOutgoing) {
       console.log('Message sent for memory creation:', response);
     }
   });
+}
+
+// Function to add translation button to an incoming message
+function addTranslationButton(messageElement, messageText, msgId) {
+  // Skip if we've already added a button to this message
+  if (translatedMessages.has(msgId)) return;
+  
+  try {
+    // Find the container where we'll add our button
+    const contentContainer = messageElement.querySelector('.copyable-text');
+    if (!contentContainer) return;
+    
+    // Create the translation button
+    const translateButton = document.createElement('button');
+    translateButton.className = 'translate-to-hindi-btn';
+    translateButton.textContent = 'Translate to Hindi';
+    translateButton.style.cssText = `
+      background: #128C7E;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 12px;
+      margin-top: 5px;
+      cursor: pointer;
+      display: block;
+    `;
+    
+    // Create a container for the translation result
+    const translationContainer = document.createElement('div');
+    translationContainer.className = 'hindi-translation';
+    translationContainer.style.cssText = `
+      margin-top: 5px;
+      font-style: italic;
+      color: #555;
+      display: none;
+    `;
+    
+    // Updated event listener with extensive error handling and logging
+    translateButton.addEventListener('click', function() {
+      // Show loading state
+      translationContainer.style.display = 'block';
+      translationContainer.textContent = 'Translating...';
+      
+      console.log("Translation button clicked for text:", messageText);
+      
+      try {
+        // Check if Chrome runtime is available before sending message
+        if (!isChromeRuntimeAvailable()) {
+          console.error("Chrome runtime not available");
+          translationContainer.textContent = 'Extension context invalidated. Please refresh the page.';
+          return;
+        }
+        
+        // Request translation via background script
+        chrome.runtime.sendMessage({
+          action: 'translateToHindi',
+          text: messageText
+        }, function(response) {
+          console.log("Translation response received:", response);
+          
+          // Handle response
+          if (chrome.runtime.lastError) {
+            console.error("Runtime error:", chrome.runtime.lastError);
+            translationContainer.textContent = 'Translation error: ' + chrome.runtime.lastError.message;
+          } else if (!response) {
+            console.error("Empty response");
+            translationContainer.textContent = 'No translation response received';
+          } else if (response.error) {
+            console.error("Error in response:", response.error);
+            translationContainer.textContent = 'Translation failed: ' + response.error;
+          } else if (response.translation) {
+            console.log("Setting translation:", response.translation);
+            translationContainer.textContent = response.translation.trim();
+            translationContainer.style.fontWeight = 'normal';
+            translationContainer.style.color = '#128C7E';
+          } else {
+            console.error("Unexpected response format:", response);
+            translationContainer.textContent = 'Translation failed: Invalid response format';
+          }
+        });
+      } catch (error) {
+        console.error("Error in translation click handler:", error);
+        translationContainer.textContent = 'Translation error: ' + error.message;
+      }
+    });
+    
+    // Add button and container to the message
+    contentContainer.parentNode.appendChild(translateButton);
+    contentContainer.parentNode.appendChild(translationContainer);
+    
+    // Mark this message as having a translation button
+    translatedMessages.add(msgId);
+    
+  } catch (e) {
+    console.error('Error adding translation button:', e);
+  }
 }
 
 function startObserver() {
@@ -244,6 +352,9 @@ function startObserver() {
           if (!isOutgoing) {
             // Use the chat name method
             sender = getCurrentChatName();
+            
+            // Add translation button for incoming messages
+            addTranslationButton(msg, messageText, msgId);
           }
           
           // Log to console with direction indicator for debugging
@@ -294,5 +405,6 @@ new MutationObserver(() => {
     lastUrl = location.href;
     // Clear processed messages when changing chats
     processedMessages.clear();
+    translatedMessages.clear(); // Also clear translation buttons tracking
   }
 }).observe(document, {subtree: true, childList: true});
