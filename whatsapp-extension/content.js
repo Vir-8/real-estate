@@ -240,7 +240,7 @@ function addTranslationButton(messageElement, messageText, msgId) {
     translationContainer.style.cssText = `
       margin-top: 5px;
       font-style: italic;
-      color: #555;
+      color: rgb(19, 223, 200);
       display: none;
     `;
     
@@ -281,7 +281,7 @@ function addTranslationButton(messageElement, messageText, msgId) {
             console.log("Setting translation:", response.translation);
             translationContainer.textContent = response.translation.trim();
             translationContainer.style.fontWeight = 'normal';
-            translationContainer.style.color = '#128C7E';
+            translationContainer.style.color = 'rgb(19, 223, 200)';
           } else {
             console.error("Unexpected response format:", response);
             translationContainer.textContent = 'Translation failed: Invalid response format';
