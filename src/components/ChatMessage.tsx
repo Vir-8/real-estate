@@ -3,13 +3,16 @@ import { format } from 'date-fns';
 import { AlertTriangle, BrainCircuit, Copy, Check, ThumbsUp, Clock, Lightbulb } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { Client, Language } from '@/types';
 
 interface ChatMessageProps {
   message: ConversationMessage;
   showInsights?: boolean;
+  client?: Client;
+  selectedLanguage?: Language;
 }
 
-export default function ChatMessage({ message, showInsights = true }: ChatMessageProps) {
+export default function ChatMessage({ message, showInsights = true, client, selectedLanguage }: ChatMessageProps) {
   const isAgent = message.sender === 'agent';
   const [copied, setCopied] = useState(false);
 

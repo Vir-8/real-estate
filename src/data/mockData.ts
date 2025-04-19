@@ -474,7 +474,7 @@ export const financialData = {
     { month: 'Sep', revenue: 8100000, target: 7000000 },
     { month: 'Oct', revenue: 9200000, target: 7000000 },
     { month: 'Nov', revenue: 8500000, target: 7500000 },
-    { month: 'Dec', revenue: 9800000, target: 7500000 },
+    { month: 'Dec', revenue: 8800000, target: 7500000 },
   ],
   
   // Property sales by type

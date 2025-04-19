@@ -15,19 +15,19 @@ export default function MemoryItem({ memory, isMem0Data = false }: MemoryItemPro
   const getMemoryIcon = (type: string) => {
     switch (type) {
       case 'location':
-        return <MapPin className="h-5 w-5" />;
+        return <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />;
       case 'preference':
-        return <Heart className="h-5 w-5" />;
+        return <Heart className="h-4 w-4 sm:h-5 sm:w-5" />;
       case 'budget':
-        return <DollarSign className="h-5 w-5" />;
+        return <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />;
       case 'contact':
-        return <Phone className="h-5 w-5" />;
+        return <Phone className="h-4 w-4 sm:h-5 sm:w-5" />;
       case 'note':
-        return <Clipboard className="h-5 w-5" />;
+        return <Clipboard className="h-4 w-4 sm:h-5 sm:w-5" />;
       case 'interaction':
-        return <MessageCircle className="h-5 w-5" />;
+        return <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />;
       default:
-        return <Clipboard className="h-5 w-5" />;
+        return <Clipboard className="h-4 w-4 sm:h-5 sm:w-5" />;
     }
   };
 
@@ -88,24 +88,24 @@ export default function MemoryItem({ memory, isMem0Data = false }: MemoryItemPro
   const colors = getMemoryColor(memory.type || 'note');
 
   return (
-    <div className={`rounded-xl p-5 shadow-sm ${colors.bg} ${colors.border} border group relative transition-all hover:shadow-md ${isPinned ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}>      
+    <div className={`rounded-xl p-4 sm:p-5 shadow-sm ${colors.bg} ${colors.border} border group relative transition-all hover:shadow-md ${isPinned ? 'ring-2 ring-blue-500 ring-offset-2' : ''}`}>      
       <div className="flex items-start">
-        <div className={`p-3 rounded-xl mr-4 ${colors.icon}`}>
+        <div className={`p-2 sm:p-3 rounded-xl mr-3 sm:mr-4 ${colors.icon}`}>
           {getMemoryIcon(memory.type || 'note')}
         </div>
         
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <div className="flex items-center flex-wrap gap-2">
-              <span className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${colors.tag}`}>
+            <div className="flex items-center flex-wrap gap-1.5 sm:gap-2">
+              <span className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-medium capitalize ${colors.tag}`}>
                 {memory.type || 'Note'}
               </span>
               {isPinned && (
-                <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
                   Pinned
                 </span>
               )}
-              <span className={`px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200`}>
+              <span className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700 border border-gray-200`}>
                 {memory.language}
               </span>
             </div>
@@ -150,30 +150,30 @@ export default function MemoryItem({ memory, isMem0Data = false }: MemoryItemPro
             </div>
           </div>
           
-          <div className="mt-3">
-            <p className="text-gray-800">
+          <div className="mt-2 sm:mt-3">
+            <p className="text-sm sm:text-base text-gray-800">
               {memory.content}
             </p>
             {memory.translatedContent && memory.content !== memory.translatedContent && (
-              <div className="mt-3 pt-3 border-t border-gray-200 opacity-80">
+              <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-gray-200 opacity-80">
                 <div className="flex items-center mb-1">
-                  <Globe size={14} className="mr-1 text-gray-500" />
+                  <Globe size={12} className="mr-1 text-gray-500" />
                   <p className="text-xs font-medium text-gray-500">TRANSLATION</p>
                 </div>
-                <p className="text-sm text-gray-700">
+                <p className="text-xs sm:text-sm text-gray-700">
                   {memory.translatedContent}
                 </p>
               </div>
             )}
           </div>
           
-          <div className="mt-3 pt-3 border-t border-gray-200 opacity-0 group-hover:opacity-100 transition-opacity">
-            <div className="flex justify-between items-center">
+          <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-gray-200 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
               <div className="flex space-x-2">
-                <button className="px-3 py-1.5 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-sm">
+                <button className="px-2 sm:px-3 py-1 sm:py-1.5 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-sm">
                   Apply Filter
                 </button>
-                <button className="px-3 py-1.5 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-sm">
+                <button className="px-2 sm:px-3 py-1 sm:py-1.5 bg-white rounded-lg text-xs font-medium hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-sm">
                   Add to Note
                 </button>
               </div>
